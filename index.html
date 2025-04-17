@@ -1,128 +1,184 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>咪姆猫咪好运数字生成</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>咪姆猫的幸运生成器</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(145deg, #fffafc, #ffe6f0);
       font-family: 'Noto Sans SC', sans-serif;
+      background: linear-gradient(145deg, #fffafc, #ffe6f0);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Spotify风播放器顶部固定 */
+    .music-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2vw 5vw;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      z-index: 1000;
+    }
+
+    .music-bar span {
+      font-size: 4vw;
+      font-weight: bold;
       color: #444;
+    }
+
+    .music-bar button {
+      padding: 2vw 4vw;
+      font-size: 4vw;
+      background: #ffffff66;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+
+    .container {
+      padding-top: 14vh;
+      padding-bottom: 10vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
     }
 
     img.mimu {
-      width: 140px;
-      margin-top: 20px;
-      cursor: pointer;
+      width: 30vw;
+      max-width: 140px;
+      margin: 4vh 0 2vh 0;
       animation: float 3s ease-in-out infinite;
     }
 
     @keyframes float {
-      0%, 100% { transform: translateY(0px); }
+      0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
 
     h1 {
-      font-size: 34px;
+      font-size: 6vw;
       color: #ff69b4;
-      margin-bottom: 5px;
+      margin: 1vh 0 0.5vh;
+      text-align: center;
     }
 
     p.subtitle {
+      font-size: 4vw;
       color: #888;
-      font-size: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 3vh;
+      text-align: center;
     }
 
     button {
-      padding: 12px 24px;
-      margin: 10px;
-      font-size: 18px;
+      width: 80vw;
+      font-size: 4.2vw;
+      padding: 3vw 0;
       background: linear-gradient(to right, #ffa0c5, #ff69b4);
       border: none;
       color: white;
-      border-radius: 25px;
+      border-radius: 20px;
       cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    button:hover {
-      transform: scale(1.05);
+      margin-bottom: 3vh;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     .result-box {
       background: white;
       border-radius: 20px;
-      padding: 20px 30px;
-      margin-bottom: 25px;
-      max-width: 500px;
-      width: 90%;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }
-
-    .result-box p {
-      font-size: 20px;
-      margin: 10px 0;
-    }
-
-    .paw {
-      font-size: 24px;
-      margin-right: 6px;
-      color: #ff69b4;
+      padding: 5vw;
+      margin-bottom: 4vh;
+      width: 90vw;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      font-size: 4vw;
+      line-height: 1.5;
     }
 
     .quote-box {
       background-color: #fff0f5;
       border-left: 5px solid #ff8fb4;
-      padding: 16px 20px;
-      margin: 30px 20px;
-      border-radius: 10px;
-      max-width: 600px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 4vw;
+      margin-bottom: 5vh;
+      border-radius: 12px;
+      max-width: 90vw;
+      font-size: 4vw;
       white-space: pre-wrap;
-      font-size: 17px;
-      line-height: 1.6;
     }
 
-    .audio-control {
-      font-size: 14px;
-      color: #d6336c;
-      margin-bottom: 20px;
-      cursor: pointer;
+    .paw {
+      font-size: 5vw;
+      color: #ff69b4;
+      margin-right: 1vw;
+    }
+
+    /* 爪印动画背景 */
+    .paw-track {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      background: url('https://i.postimg.cc/TwF1fwFy/paw-light.png') no-repeat center/contain;
+      opacity: 0.4;
+      animation: floatPaw 6s linear forwards;
+      z-index: 0;
+    }
+
+    @keyframes floatPaw {
+      0% {
+        transform: translateX(-100px);
+        opacity: 0;
+      }
+      30% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateX(100vw);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
-
-  <!-- 背景音乐播放器（不自动播放） -->
-  <audio id="bgm" loop>
-    <source src="cat_song.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-
-  <div class="audio-control">
-    <button onclick="toggleBGM()">🎵 播放 / 暂停《小猫之歌》</button>
+  <!-- 播放器 -->
+  <div class="music-bar">
+    <span>🎵 小猫之歌</span>
+    <button onclick="toggleBGM()">▶️/⏸️</button>
+    <audio id="bgm" loop>
+      <source src="cat_song.mp3" type="audio/mpeg" />
+    </audio>
   </div>
 
-  <img class="mimu" src="1000085713_pixian_ai.png" alt="咪姆猫" onclick="showRandomQuote()" title="点我换一句猫语~喵" />
+  <!-- 动态猫爪容器（JS中生成） -->
+  <div id="paw-container"></div>
 
-  <h1>🐾 咪姆猫咪好运数字生成</h1>
-  <p class="subtitle">“喵～今天的幸运数字来啦，快选一组带回家！”</p>
+  <div class="container">
+    <img class="mimu" src="1000085713_pixian_ai.png" alt="咪姆猫" onclick="showRandomQuote()" />
+    <h1>🐾 咪姆猫的幸运日签</h1>
+    <p class="subtitle">“喵～来摸我一下，给你带点好运~”</p>
 
-  <div class="quote-box" id="catQuote">加载猫语中喵...</div>
+    <div class="quote-box" id="catQuote">加载猫语中喵...</div>
 
-  <button onclick="generateSSQ()">🎁 喵喵！来组双色球</button>
-  <button onclick="generateDLT()">✨ 呼噜～来组大乐透</button>
+    <button onclick="generateSSQ()">🎁 来组双色球</button>
+    <button onclick="generateDLT()">✨ 来组大乐透</button>
 
-  <div class="result-box" id="ssqResult"></div>
-  <div class="result-box" id="dltResult"></div>
+    <div class="result-box" id="ssqResult"></div>
+    <div class="result-box" id="dltResult"></div>
+
+  </div>
 
   <script>
     const quotes = [
@@ -131,7 +187,7 @@
       "“Life is like a box of chocolates.” — Forrest Gump\n人生就像一盒巧克力，你永远不知道下一颗是什么味道。",
       "“Even the darkest night will end and the sun will rise.” — Les Misérables\n即使最黑暗的夜晚也终将过去，太阳会升起。",
       "“Not all those who wander are lost.” — J.R.R. Tolkien\n并非所有流浪的人都迷失了方向。",
-      "“It’s not our abilities that show what we truly are. It is our choices.” — Harry Potter\n真正决定我们是谁的，不是我们的能力，而是我们的选择。",
+      "“It’s not our abilities that show what we truly are. It is our choices.” — Harry Potter\n真正决定我们是谁的，不是我们的能力，而是我们的选择。"
     ];
 
     function showRandomQuote() {
@@ -147,9 +203,6 @@
         audio.pause();
       }
     }
-
-    // 初始加载猫语
-    showRandomQuote();
 
     function generateSSQ() {
       let redBalls = [];
@@ -196,6 +249,23 @@
         `<p><span class="paw">🐾</span><strong>前区：</strong>${frontStr}</p>
          <p><span class="paw">🌟</span><strong>后区：</strong>${backStr}</p>`;
     }
+
+    // 🐾 动态生成猫爪
+    function createPaw() {
+      const paw = document.createElement("div");
+      paw.className = "paw-track";
+      paw.style.top = `${Math.random() * 80 + 10}vh`;
+      paw.style.left = Math.random() < 0.5 ? "-30px" : "100vw";
+      document.getElementById("paw-container").appendChild(paw);
+
+      setTimeout(() => paw.remove(), 6000);
+    }
+
+    // 每隔一段时间飘一个爪
+    setInterval(createPaw, 3000);
+
+    // 初始化猫语
+    showRandomQuote();
   </script>
 </body>
 </html>
