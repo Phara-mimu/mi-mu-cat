@@ -90,11 +90,27 @@
       font-size: 17px;
       line-height: 1.6;
     }
+
+    .audio-control {
+      font-size: 14px;
+      color: #d6336c;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
-  <img class="mimu" src="1000085713_pixian_ai.png" alt="咪姆猫" onclick="showRandomQuote()" title="点我换一句喵语" />
+  <!-- 背景音乐播放器 -->
+  <audio id="bgm" autoplay loop>
+    <source src="cat_song.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <div class="audio-control" onclick="toggleBGM()">🎵 点击播放 / 暂停咪姆猫的背景歌《小猫之歌》</div>
+
+  <img class="mimu" src="1000085713_pixian_ai.png" alt="咪姆猫" onclick="showRandomQuote()" title="点我换一句猫语~喵" />
+
   <h1>🐾 咪姆猫咪好运数字生成</h1>
   <p class="subtitle">“喵～今天的幸运数字来啦，快选一组带回家！”</p>
 
@@ -107,34 +123,31 @@
   <div class="result-box" id="dltResult"></div>
 
   <script>
-    // 猫语双语台词库
     const quotes = [
       "“Hope is a good thing, maybe the best of things.” — The Shawshank Redemption\n希望是美好的，也许是人间至善。",
       "“To me, you are perfect.” — Love Actually\n对我来说，你就是完美的。",
       "“Life is like a box of chocolates.” — Forrest Gump\n人生就像一盒巧克力，你永远不知道下一颗是什么味道。",
-      "“Do, or do not. There is no try.” — Star Wars\n要么做，要么不做，没有试试看这回事。",
-      "“All we have to decide is what to do with the time that is given us.” — The Lord of the Rings\n我们唯一要决定的是如何利用赋予我们的时间。",
       "“Even the darkest night will end and the sun will rise.” — Les Misérables\n即使最黑暗的夜晚也终将过去，太阳会升起。",
-      "“You must be the change you wish to see in the world.” — Gandhi\n你必须成为你希望在世界上看到的改变。",
-      "“Happiness can be found even in the darkest of times.” — Harry Potter\n即使在最黑暗的时刻，也能找到幸福的光芒。",
       "“Not all those who wander are lost.” — J.R.R. Tolkien\n并非所有流浪的人都迷失了方向。",
-      "“It’s not our abilities that show what we truly are. It is our choices.” — Harry Potter\n真正决定我们是谁的，不是我们的能力，而是我们的选择。"
+      "“It’s not our abilities that show what we truly are. It is our choices.” — Harry Potter\n真正决定我们是谁的，不是我们的能力，而是我们的选择。",
     ];
-
-    // 每日一句（日期hash）
-    function getDailyQuote() {
-      const today = new Date().toISOString().split("T")[0];
-      const hash = [...today].reduce((acc, c) => acc + c.charCodeAt(0), 0);
-      return quotes[hash % quotes.length];
-    }
 
     function showRandomQuote() {
       const quote = quotes[Math.floor(Math.random() * quotes.length)];
       document.getElementById("catQuote").innerText = quote;
     }
 
-    // 初始化加载“每日一句”
-    document.getElementById("catQuote").innerText = getDailyQuote();
+    function toggleBGM() {
+      const audio = document.getElementById("bgm");
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    }
+
+    // 初始加载猫语
+    showRandomQuote();
 
     function generateSSQ() {
       let redBalls = [];
@@ -182,6 +195,5 @@
          <p><span class="paw">🌟</span><strong>后区：</strong>${backStr}</p>`;
     }
   </script>
-
 </body>
 </html>
