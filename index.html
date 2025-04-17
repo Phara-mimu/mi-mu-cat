@@ -101,13 +101,15 @@
 </head>
 <body>
 
-  <!-- 背景音乐播放器 -->
-  <audio id="bgm" autoplay loop>
+  <!-- 背景音乐播放器（不自动播放） -->
+  <audio id="bgm" loop>
     <source src="cat_song.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
-  <div class="audio-control" onclick="toggleBGM()">🎵 点击播放 / 暂停咪姆猫的背景歌《小猫之歌》</div>
+  <div class="audio-control">
+    <button onclick="toggleBGM()">🎵 播放 / 暂停《小猫之歌》</button>
+  </div>
 
   <img class="mimu" src="1000085713_pixian_ai.png" alt="咪姆猫" onclick="showRandomQuote()" title="点我换一句猫语~喵" />
 
