@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>咪姆猫的幸运生成器</title>
+  <title>咪姆猫幸运日签</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
   <style>
     * {
@@ -19,40 +19,47 @@
       position: relative;
     }
 
-    /* Spotify风播放器顶部固定 */
+    /* 🎧🐱播放器 */
     .music-bar {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
+      top: 2vh;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(8px);
+      border-radius: 40px;
+      padding: 0.8em 1.2em;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 2vw 5vw;
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      gap: 1em;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       z-index: 1000;
+      font-size: 5vw;
+      max-width: 280px;
+      width: 80vw;
     }
 
     .music-bar span {
-      font-size: 4vw;
-      font-weight: bold;
-      color: #444;
+      font-size: 1.2em;
     }
 
     .music-bar button {
-      padding: 2vw 4vw;
-      font-size: 4vw;
-      background: #ffffff66;
+      background: white;
       border: none;
-      border-radius: 50px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1em;
       cursor: pointer;
-      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .container {
-      padding-top: 14vh;
+      padding-top: 16vh;
       padding-bottom: 10vh;
       display: flex;
       flex-direction: column;
@@ -126,24 +133,24 @@
       margin-right: 1vw;
     }
 
-    /* 爪印动画背景 */
+    /* 🐾 脚印动画 */
     .paw-track {
       position: fixed;
-      width: 30px;
-      height: 30px;
-      background: url('https://i.postimg.cc/TwF1fwFy/paw-light.png') no-repeat center/contain;
-      opacity: 0.4;
-      animation: floatPaw 6s linear forwards;
+      font-size: 24px;
+      color: rgba(0, 0, 0, 0.2);
+      animation: walkAcross 5s linear forwards;
+      white-space: nowrap;
+      pointer-events: none;
       z-index: 0;
     }
 
-    @keyframes floatPaw {
+    @keyframes walkAcross {
       0% {
-        transform: translateX(-100px);
         opacity: 0;
+        transform: translateX(-100px) scale(1);
       }
       30% {
-        opacity: 0.3;
+        opacity: 0.4;
       }
       100% {
         transform: translateX(100vw);
@@ -153,16 +160,17 @@
   </style>
 </head>
 <body>
+
   <!-- 播放器 -->
   <div class="music-bar">
-    <span>🎵 小猫之歌</span>
-    <button onclick="toggleBGM()">▶️/⏸️</button>
+    <span>🎧🐱</span>
+    <button onclick="toggleBGM()">▶️</button>
     <audio id="bgm" loop>
       <source src="cat_song.mp3" type="audio/mpeg" />
     </audio>
   </div>
 
-  <!-- 动态猫爪容器（JS中生成） -->
+  <!-- 脚印容器 -->
   <div id="paw-container"></div>
 
   <div class="container">
@@ -177,7 +185,6 @@
 
     <div class="result-box" id="ssqResult"></div>
     <div class="result-box" id="dltResult"></div>
-
   </div>
 
   <script>
@@ -250,21 +257,24 @@
          <p><span class="paw">🌟</span><strong>后区：</strong>${backStr}</p>`;
     }
 
-    // 🐾 动态生成猫爪
     function createPaw() {
       const paw = document.createElement("div");
       paw.className = "paw-track";
-      paw.style.top = `${Math.random() * 80 + 10}vh`;
-      paw.style.left = Math.random() < 0.5 ? "-30px" : "100vw";
-      document.getElementById("paw-container").appendChild(paw);
 
-      setTimeout(() => paw.remove(), 6000);
+      const top = Math.random() * 80 + 10;
+      const leftToRight = Math.random() > 0.5;
+      paw.style.top = `${top}vh`;
+      paw.style.left = leftToRight ? "-100px" : "100vw";
+      paw.style.transform = leftToRight ? "scale(1)" : "scale(-1, 1)";
+
+      const steps = Math.floor(Math.random() * 3) + 3;
+      paw.textContent = "🐾".repeat(steps);
+
+      document.getElementById("paw-container").appendChild(paw);
+      setTimeout(() => paw.remove(), 5000);
     }
 
-    // 每隔一段时间飘一个爪
-    setInterval(createPaw, 3000);
-
-    // 初始化猫语
+    setInterval(createPaw, 3500);
     showRandomQuote();
   </script>
 </body>
